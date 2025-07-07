@@ -1,0 +1,17 @@
+name: RDP Generator
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+    - name: Setup RDP
+      run: |
+        net user runnerpass 12345 /add
+        net localgroup administrators runnerpass /add
+        powershell -Command "Set-ItemProperty -Path 'HKLM:\SYSTEM\CurrentControlSet\Control\Terminal Server' -Name fDenyTSConnections -Value 0"
+        powershell -Command "Enable-NetFirewallRule -DisplayGroup 'Remote Desktop'"
+        echo "🔑 USER: runnerpass / PASS: 12345"
+        ipconfig
